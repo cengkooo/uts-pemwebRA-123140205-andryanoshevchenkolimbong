@@ -1,16 +1,6 @@
 import banner_image from "../assets/images/banner_image.png";
-import slider_img_1 from "../assets/images/slider_img_1.png";
-import slider_img_2 from "../assets/images/slider_img_2.png";
-import slider_img_3 from "../assets/images/slider_img_3.png";
-import slider_img_4 from "../assets/images/slider_img_4.jpg";
-import slider_img_5 from "../assets/images/slider_img_5.jpg";
-import slider_img_6 from "../assets/images/slider_img_6.jpg";
-import slider_img_7 from "../assets/images/slider_img_7.jpg";
 import game_details_image from "../assets/images/game_details_image.png";
 import loader from "../assets/images/loader.gif";
 
-// slider images import and then exported
-const sliderImages = [ slider_img_1, slider_img_2, slider_img_3, slider_img_4, slider_img_5, slider_img_6, slider_img_7 ];
-
 // all images 
-export { banner_image, sliderImages, game_details_image, loader };
+export { banner_image, game_details_image, loader };
