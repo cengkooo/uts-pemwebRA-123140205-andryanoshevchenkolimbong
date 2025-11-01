@@ -9,7 +9,6 @@ import { FaGlobe } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import { StoreItem } from "../store";
 
 const GameDetails = ({ gameData }) => {
   let platforms = gameData?.platforms?.map(
