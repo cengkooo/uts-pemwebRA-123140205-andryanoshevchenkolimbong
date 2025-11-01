@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import {
   Banner,
-  ImageSlider,
   Preloader,
-  Tabs,
   Title,
 } from "../../components/common/index";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,30 +15,20 @@ import { fetchAsyncGames } from "../../redux/utils/gameUtils";
 import { STATUS } from "../../utils/status";
 import { GameList } from "../../components/game/index";
 import { Link } from "react-router-dom";
-import {
-  selectAllGenres,
-  selectAllGenresStatus,
-} from "../../redux/store/genreSlice";
-import { fetchAsyncGenres } from "../../redux/utils/genreUtils";
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const games = useSelector(selectAllGames);
   const gamesStatus = useSelector(selectAllGamesStatus);
   const gamesError = useSelector(selectGamesError);
-  const genres = useSelector(selectAllGenres);
-  const genresStatus = useSelector(selectAllGenresStatus);
 
   useEffect(() => {
     // Fetch popular games (default ordering by rating)
     dispatch(fetchAsyncGames({ 
       page: 1, 
       pageSize: 9,
-      ordering: '-rating' // Sort by rating descending
+      ordering: '-rating'
     }));
-    
-    // Fetch genres
-    dispatch(fetchAsyncGenres());
   }, [dispatch]);
 
   const renderedPopularGames = (
@@ -48,7 +36,7 @@ const HomePage = () => {
       <GameList sliceValue={9} games={games} />
       <div className="d-flex justify-content-center">
         <Link to="/games" className="section-btn">
-          see more games
+          View All Games
         </Link>
       </div>
     </>
@@ -61,7 +49,7 @@ const HomePage = () => {
       <section className="section sc-popular">
         <div className="container">
           <Title
-            titleName={{ firstText: "top popular", secondText: "games" }}
+            titleName={{ firstText: "Featured", secondText: "Games" }}
           />
           {gamesStatus === STATUS.LOADING ? (
             <Preloader />
@@ -70,7 +58,7 @@ const HomePage = () => {
               <p>Failed to load games: {gamesError}</p>
               <button 
                 className="section-btn mt-4"
-                onClick={() => dispatch(fetchAsyncGames({ page: 1, pageSize: 9 }))}
+                onClick={() => dispatch(fetchAsyncGames({ page: 1, pageSize: 9, ordering: '-rating' }))}
               >
                 Retry
               </button>
@@ -82,26 +70,6 @@ const HomePage = () => {
           )}
         </div>
       </section>
-
-      <ImageSlider />
-
-      <section className="section sc-genres">
-        <div className="container">
-          <Title
-            titleName={{
-              firstText: "top",
-              secondText: "genres",
-            }}
-          />
-        </div>
-        {genresStatus === STATUS.LOADING ? (
-          <Preloader />
-        ) : genres?.length > 0 ? (
-          <Tabs sliceValue={9} data={genres} />
-        ) : (
-          <div className="text-white text-center">No genres found!</div>
-        )}
-      </section>
     </HomeWrapper>
   );
 };
@@ -109,26 +77,26 @@ const HomePage = () => {
 export default HomePage;
 
 const HomeWrapper = styled.div`
+  background-color: var(--clr-black);
+
   .sc-popular {
-    background-color: var(--clr-violet-dark-active);
+    background-color: var(--clr-black);
     min-height: 60vh;
+    padding-top: 100px;
+    padding-bottom: 100px;
     
     .section-btn {
       margin-top: 60px;
     }
 
     .error-message {
-      padding: 40px 20px;
+      padding: 60px 20px;
       
       p {
         font-size: 18px;
         margin-bottom: 20px;
+        color: var(--clr-gray-lighter);
       }
     }
-  }
-
-  .sc-genres {
-    background-color: var(--clr-violet-dark-active);
-    min-height: 60vh;
   }
 `;
