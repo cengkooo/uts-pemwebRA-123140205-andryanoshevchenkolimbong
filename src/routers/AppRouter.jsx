@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Home, Error, ViewGameAll, ViewGameDetails, ViewStoreAll, ViewStoreDetails, ViewCreatorAll } from '../views/index';
+import { Home, Error, ViewGameAll, ViewGameDetails } from '../views/index';
 import BaseLayout from "../layouts/BaseLayout";
 
 const AppRouter = () => {

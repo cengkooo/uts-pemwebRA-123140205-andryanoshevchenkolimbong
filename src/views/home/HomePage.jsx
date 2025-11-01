@@ -21,12 +21,6 @@ import {
   selectAllGenresStatus,
 } from "../../redux/store/genreSlice";
 import { fetchAsyncGenres } from "../../redux/utils/genreUtils";
-import {
-  selectAllStores,
-  selectAllStoresStatus,
-} from "../../redux/store/storeSlice";
-import { StoreList } from "../../components/store/index";
-import { fetchAsyncStores } from "../../redux/utils/storeUtils";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -34,13 +28,10 @@ const HomePage = () => {
   const gamesStatus = useSelector(selectAllGamesStatus);
   const genres = useSelector(selectAllGenres);
   const genresStatus = useSelector(selectAllGenresStatus);
-  const stores = useSelector(selectAllStores);
-  const storesStatus = useSelector(selectAllStoresStatus);
 
   useEffect(() => {
     dispatch(fetchAsyncGames());
     dispatch(fetchAsyncGenres());
-    dispatch(fetchAsyncStores());
   }, []);
 
   const renderedPopularGames = (
@@ -92,29 +83,6 @@ const HomePage = () => {
           "No genres found!"
         )}
       </section>
-
-      <section
-        className="section sc-stores"
-        style={{
-          background: `linear-gradient(180deg, rgba(12, 10, 36, 0.73) 0%, rgba(0, 0, 0, 0.73) 72.92%), url(${store_image}) center/cover no-repeat`,
-        }}
-      >
-        <div className="container">
-          <Title
-            titleName={{
-              firstText: "our",
-              secondText: "game stores",
-            }}
-          />
-          {storesStatus === STATUS.LOADING ? (
-            <Preloader />
-          ) : stores?.length > 0 ? (
-            <StoreList stores={stores} />
-          ) : (
-            "No stores found!"
-          )}
-        </div>
-      </section>
     </HomeWrapper>
   );
 };
@@ -129,29 +97,7 @@ const HomeWrapper = styled.div`
     }
   }
 
-
-
-    .join-content {
-      max-width: 600px;
-    }
-
-    .join-title {
-      text-shadow: 0px 4px 4px 0px #00000040;
-      font-size: 44px;
-      letter-spacing: 0.09em;
-
-      span {
-        color: var(--clr-green-normal);
-        font-family: var(--font-family-right);
-      }
-    }
-  }
-
   .sc-genres {
     background-color: var(--clr-violet-dark-active);
-  }
-
-  .sc-stores {
-    min-height: 841px;
   }
 `;
