@@ -7,3 +7,4 @@ export { default as Tabs} from "./Tabs";
 export { default as Title } from "./Title";
 export { default as Banner } from "./Banner";
 export { default as StarRating } from "./StarRating";
+export { default as SearchBar } from "./SearchBar";

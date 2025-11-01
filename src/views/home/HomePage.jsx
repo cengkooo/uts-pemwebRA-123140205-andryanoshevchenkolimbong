@@ -4,6 +4,7 @@ import {
   Preloader,
   Title,
   Tabs,
+  SearchBar,
 } from "../../components/common/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,10 +21,11 @@ import { fetchAsyncGames } from "../../redux/utils/gameUtils";
 import { fetchAsyncGenres } from "../../redux/utils/genreUtils";
 import { STATUS } from "../../utils/status";
 import { GameList } from "../../components/game/index";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const games = useSelector(selectAllGames);
   const gamesStatus = useSelector(selectAllGamesStatus);
   const gamesError = useSelector(selectGamesError);
@@ -42,6 +44,11 @@ const HomePage = () => {
     dispatch(fetchAsyncGenres());
   }, [dispatch]);
 
+  const handleSearch = (query) => {
+    // Navigate to games page with search query
+    navigate(`/games?search=${query}`);
+  };
+
   const renderedPopularGames = (
     <>
       <GameList sliceValue={9} games={games} />
@@ -56,6 +63,13 @@ const HomePage = () => {
   return (
     <HomeWrapper>
       <Banner />
+
+      {/* Search Section */}
+      <section className="section sc-search">
+        <div className='container'>
+          <SearchBar onSearch={handleSearch} />
+        </div>
+      </section>
 
       <section className="section sc-popular">
         <div className='bg-overlay'></div>
@@ -106,6 +120,12 @@ export default HomePage;
 
 const HomeWrapper = styled.div`
   background-color: var(--clr-black);
+
+  .sc-search {
+    background-color: var(--clr-black);
+    padding-top: 80px;
+    padding-bottom: 40px;
+  }
 
   .sc-popular {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.9) 100%),
