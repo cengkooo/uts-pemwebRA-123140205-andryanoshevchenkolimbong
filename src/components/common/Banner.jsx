@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { banner_image } from '../../utils/images';
 
 const Banner = () => {
   return (
@@ -28,7 +29,8 @@ export default Banner;
 
 const BannerWrapper = styled.div`
   min-height: 85vh;
-  background: linear-gradient(180deg, var(--clr-black) 0%, var(--clr-gray-darkest) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(10, 10, 10, 0.8) 100%), 
+              url(${banner_image}) center/cover no-repeat;
   position: relative;
   overflow: hidden;
 
