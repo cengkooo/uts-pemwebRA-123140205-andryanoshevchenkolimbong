@@ -5,7 +5,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { GenreItem } from '../genre';
 
 const Tabs = ({ data }) => {
-  const [activeTab, setActiveTab] = useState(data[0]); // using first genre as the default tab
+  const [activeTab, setActiveTab] = useState(data[0]);
   const [tabButtonStatus, setTabButtonStatus] = useState(false);
 
   const tabClickHandler = (id) => {
@@ -17,7 +17,6 @@ const Tabs = ({ data }) => {
   }
 
   const tabButtonsHandler = () => setTabButtonStatus(prevStatus => !prevStatus);
-
 
   return (
     <TabsWrapper className='bg-white'>
@@ -41,7 +40,7 @@ const Tabs = ({ data }) => {
           <div className='tabs-body'>
             <div className='card-list'>
               {
-                activeTab?.games?.map(item => (
+                activeTab?.games?.slice(0, 6).map(item => (
                   <GenreItem key = {item.id} gameItem = { item } />
                 ))
               }
@@ -62,48 +61,44 @@ Tabs.propTypes = {
 
 const TabsWrapper = styled.div`
   position: relative;
-  min-height: 1000px;
-  background-color: var(--clr-violet-dark-active);
+  min-height: 800px;
+  background-color: var(--clr-black);
 
   .tabs-buttons{
     position: absolute;
     left: 0;
     top: 0;
-    width: 286px;
+    width: 240px;
     z-index: 99;
-    padding-top: 60px;
+    padding-top: 20px;
     padding-bottom: 60px;
-    /* box-shadow: rgba(0, 0, 0, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px; */
+    background-color: var(--clr-gray-dark);
+    border-right: 1px solid var(--clr-gray-medium);
     transition: var(--transition-default);
+    max-height: 100vh;
+    overflow-y: auto;
 
     .tabs-buttons-close{
       position: absolute;
-      right: -32px;
+      right: -40px;
       top: 0;
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       display: none;
+      background-color: var(--clr-gray-dark);
+      border: 1px solid var(--clr-gray-medium);
 
       &:hover{
-        background-color: var(--clr-pink-normal);
-        color: var(--clr-white);
+        background-color: var(--clr-white);
+        color: var(--clr-black);
       }
     }
 
-    @media screen and (max-width: 1480px){
-      width: 240px;
-    }
-
-    @media screen and (max-width: 1380px){
-      width: 200px;
-    }
-
     @media screen and (max-width: 1280px){
-      transform: translateX(-88%);
-      width: 286px;
+      transform: translateX(-100%);
 
       .tabs-buttons-close{
-        display: block;
+        display: flex;
       }
 
       &.show{
@@ -114,33 +109,39 @@ const TabsWrapper = styled.div`
 
   .tabs-button{
     button{
-      padding: 12px 30px;
-      font-family: 'Barlow';
+      padding: 16px 30px;
+      font-family: var(--font-family-primary);
       font-weight: 500;
-      font-size: 18px;
-      letter-spacing: 0.1em;
-      /* border-bottom: 1px solid rgba(255, 255, 255, 0.03); */
+      font-size: 15px;
+      letter-spacing: 0.05em;
       width: 100%;
       text-align: start;
+      transition: var(--transition-default);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     &:hover:not(.tabs-active){
-      background-color: rgba(0, 0, 0, 0.05);
+      background-color: var(--clr-gray-medium);
     }
   }
 
   .tabs-active{
-    background-color: var(--clr-pink-normal);
+    background-color: var(--clr-white);
     button{
-      color: var(--clr-white);
+      color: var(--clr-black);
     }
   }
 
   .tabs-body{
-    max-width: 1050px;
-    margin-left: auto;
+    margin-left: 260px;
+    padding: 20px;
+
+    @media screen and (max-width: 1280px){
+      margin-left: 0;
+    }
+  }
+
+  @media screen and (max-width: 768px){
+    min-height: 600px;
   }
 `;
-
-    
-

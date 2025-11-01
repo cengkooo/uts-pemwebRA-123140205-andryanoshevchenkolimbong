@@ -3,6 +3,7 @@ import {
   Banner,
   Preloader,
   Title,
+  Tabs,
 } from "../../components/common/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,8 +11,13 @@ import {
   selectAllGamesStatus,
   selectGamesError
 } from "../../redux/store/gameSlice";
+import {
+  selectAllGenres,
+  selectAllGenresStatus
+} from "../../redux/store/genreSlice";
 import { useEffect } from "react";
 import { fetchAsyncGames } from "../../redux/utils/gameUtils";
+import { fetchAsyncGenres } from "../../redux/utils/genreUtils";
 import { STATUS } from "../../utils/status";
 import { GameList } from "../../components/game/index";
 import { Link } from "react-router-dom";
@@ -21,14 +27,19 @@ const HomePage = () => {
   const games = useSelector(selectAllGames);
   const gamesStatus = useSelector(selectAllGamesStatus);
   const gamesError = useSelector(selectGamesError);
+  const genres = useSelector(selectAllGenres);
+  const genresStatus = useSelector(selectAllGenresStatus);
 
   useEffect(() => {
-    // Fetch popular games (default ordering by rating)
+    // Fetch popular games
     dispatch(fetchAsyncGames({ 
       page: 1, 
       pageSize: 9,
       ordering: '-rating'
     }));
+
+    // Fetch genres
+    dispatch(fetchAsyncGenres());
   }, [dispatch]);
 
   const renderedPopularGames = (
@@ -47,7 +58,8 @@ const HomePage = () => {
       <Banner />
 
       <section className="section sc-popular">
-        <div className="container">
+        <div className='bg-overlay'></div>
+        <div className='container'>
           <Title
             titleName={{ firstText: "Featured", secondText: "Games" }}
           />
@@ -70,6 +82,22 @@ const HomePage = () => {
           )}
         </div>
       </section>
+
+      {/* Genres Section */}
+      <section className="section sc-genres">
+        <div className='container'>
+          <Title
+            titleName={{ firstText: "Top", secondText: "Genres" }}
+          />
+          {genresStatus === STATUS.LOADING ? (
+            <Preloader />
+          ) : genres?.length > 0 ? (
+            <Tabs data={genres} />
+          ) : (
+            <p className="text-white text-center">No genres found!</p>
+          )}
+        </div>
+      </section>
     </HomeWrapper>
   );
 };
@@ -80,10 +108,29 @@ const HomeWrapper = styled.div`
   background-color: var(--clr-black);
 
   .sc-popular {
-    background-color: var(--clr-black);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.9) 100%),
+                url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1920') center/cover no-repeat fixed;
     min-height: 60vh;
     padding-top: 100px;
     padding-bottom: 100px;
+    position: relative;
+    
+    .bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .container {
+      position: relative;
+      z-index: 2;
+    }
     
     .section-btn {
       margin-top: 60px;
@@ -98,5 +145,11 @@ const HomeWrapper = styled.div`
         color: var(--clr-gray-lighter);
       }
     }
+  }
+
+  .sc-genres {
+    background-color: var(--clr-black);
+    padding-top: 0;
+    padding-bottom: 100px;
   }
 `;
