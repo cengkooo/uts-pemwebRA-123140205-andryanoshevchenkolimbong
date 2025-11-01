@@ -9,10 +9,10 @@ const Footer = () => {
           <div className='footer-grid'>
             <div className='footer-column'>
               <Link to="/" className='footer-brand text-white text-uppercase'>
-                GAMES
+                &diams;Nexura&diams;
               </Link>
               <p className='footer-description'>
-                Your ultimate gaming database. Discover, explore, and track your favorite games.
+                Enter the world where games and dreams collide.
               </p>
             </div>
 
@@ -27,9 +27,9 @@ const Footer = () => {
             <div className='footer-column'>
               <h4 className='footer-title'>Information</h4>
               <ul className='footer-links'>
-                <li><a href="#" className='footer-link'>About</a></li>
-                <li><a href="#" className='footer-link'>Contact</a></li>
-                <li><a href="#" className='footer-link'>Privacy Policy</a></li>
+                <li><a href="https://rawg.io/apidocs" target='blank'>About</a></li>
+                <li><a href="mailto:andryano.produktivitas@email.com">Contact</a></li>
+                <li><a href="https://rawg.io/apidocs#terms" target='blank'>Privacy Policy</a></li>
               </ul>
             </div>
           </div>
