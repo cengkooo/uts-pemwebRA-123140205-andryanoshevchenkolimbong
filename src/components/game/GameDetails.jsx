@@ -120,7 +120,6 @@ const GameDetails = ({ gameData }) => {
         <TabList>
           <Tab>Description</Tab>
           <Tab>Platform</Tab>
-          <Tab>Stores</Tab>
         </TabList>
 
         <TabPanel>
@@ -149,14 +148,6 @@ const GameDetails = ({ gameData }) => {
                 </div>
               );
             })}
-          </div>
-        </TabPanel>
-        <TabPanel>
-          <h3 className="text-white mb-3">Available Stores</h3>
-          <div className="card-list">
-            {gameData?.stores?.map((item) => (
-              <StoreItem key={item?.store?.id} storeItem={item?.store} />
-            ))}
           </div>
         </TabPanel>
       </Tabs>

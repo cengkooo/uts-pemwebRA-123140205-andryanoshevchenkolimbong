@@ -31,37 +31,7 @@ const Navbar = () => {
                 <Link to = "/" className='nav-link'>home</Link>
               </li>
               <li className='nav-item'>
-                <Link to = "/creators" className='nav-link'>creators</Link>
-              </li>
-              <li className='nav-item'>
-                <Link to = "/stores" className='nav-link'>stores</Link>
-              </li>
-              <li className='nav-item'>
                 <Link to = "/games" className='nav-link'>games</Link>
-              </li>
-            </ul>
-
-            <ul className='connect-list d-flex justify-content-center align-items-center mt-5 flex-wrap'>
-              <li className='text-uppercase fw-7 w-100 connect-text mb-2'>connect</li>
-              <li className='connect-item'>
-                <Link to = "/" className='connect-link'>
-                  <BsRssFill />
-                </Link>
-              </li>
-              <li className='connect-item'>
-                <Link to = "/" className='connect-link'>
-                  <BsSteam size = { 18 } />
-                </Link>
-              </li>
-              <li className='connect-item'>
-                <Link to = "/" className='connect-link'>
-                  <BsTwitch size = { 18 } />
-                </Link>
-              </li>
-              <li className='connect-item'>
-                <Link to = "/" className='connect-link'>
-                  <BsYoutube size = { 19 } />
-                </Link>
               </li>
             </ul>
           </div>
@@ -196,30 +166,12 @@ const NavbarWrapper = styled.div`
       color: var(--clr-white);
       padding: 1px 10px;
     }
-    .connect-list{
-      display: flex;
-      margin-top: 0;
-      color: var(--clr-white);
-      margin-left: 40px;
-      .connect-text{
-        width: auto;
-        margin-bottom: 0;
-        margin-right: 22px;
-        display: none;
-      }
-      .connect-link{
-        color: var(--clr-white);
-      }
-    }
-  }
 
   @media screen and (min-width: 1200px){
     .nav-link{
       padding-right: 16px;
       padding-left: 16px;
     }
-    .connect-list{
-      margin-left: 88px;
 
       .connect-text{
         display: inline-block;

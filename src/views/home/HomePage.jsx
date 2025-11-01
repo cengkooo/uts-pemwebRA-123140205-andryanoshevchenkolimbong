@@ -16,7 +16,6 @@ import { fetchAsyncGames } from "../../redux/utils/gameUtils";
 import { STATUS } from "../../utils/status";
 import { GameList } from "../../components/game/index";
 import { Link } from "react-router-dom";
-import { join_image, store_image } from "../../utils/images";
 import {
   selectAllGenres,
   selectAllGenresStatus,
@@ -76,29 +75,6 @@ const HomePage = () => {
 
       <ImageSlider />
 
-      <section
-        className="section sc-join d-flex align-items-center"
-        style={{
-          background: `linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${join_image}) center/cover no-repeat`,
-        }}
-      >
-        <div className="container w-100">
-          <div className="join-content text-white mx-auto text-center">
-            <h2 className="join-title mb-3">
-              JOIN THE <span>COMMUNITY</span>
-            </h2>
-            <p className="lead-text">
-              Join our Discord community which is in the making and made by
-              gamers for gamers. All are welcome to join no matter the game you
-              play, we&apos;re here to have a good.
-            </p>
-            <button type="button" className="section-btn mt-4">
-              join discord
-            </button>
-          </div>
-        </div>
-      </section>
-
       <section className="section sc-genres">
         <div className="container">
           <Title
@@ -153,8 +129,7 @@ const HomeWrapper = styled.div`
     }
   }
 
-  .sc-join {
-    min-height: 640px;
+
 
     .join-content {
       max-width: 600px;
