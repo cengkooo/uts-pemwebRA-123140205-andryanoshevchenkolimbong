@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   selectAllGames,
   selectAllGamesStatus,
+  selectGamesError
 } from "../../redux/store/gameSlice";
 import { useEffect } from "react";
 import { fetchAsyncGames } from "../../redux/utils/gameUtils";
@@ -26,13 +27,21 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const games = useSelector(selectAllGames);
   const gamesStatus = useSelector(selectAllGamesStatus);
+  const gamesError = useSelector(selectGamesError);
   const genres = useSelector(selectAllGenres);
   const genresStatus = useSelector(selectAllGenresStatus);
 
   useEffect(() => {
-    dispatch(fetchAsyncGames());
+    // Fetch popular games (default ordering by rating)
+    dispatch(fetchAsyncGames({ 
+      page: 1, 
+      pageSize: 9,
+      ordering: '-rating' // Sort by rating descending
+    }));
+    
+    // Fetch genres
     dispatch(fetchAsyncGenres());
-  }, []);
+  }, [dispatch]);
 
   const renderedPopularGames = (
     <>
@@ -56,10 +65,20 @@ const HomePage = () => {
           />
           {gamesStatus === STATUS.LOADING ? (
             <Preloader />
+          ) : gamesStatus === STATUS.FAILED ? (
+            <div className="error-message text-white text-center">
+              <p>Failed to load games: {gamesError}</p>
+              <button 
+                className="section-btn mt-4"
+                onClick={() => dispatch(fetchAsyncGames({ page: 1, pageSize: 9 }))}
+              >
+                Retry
+              </button>
+            </div>
           ) : games?.length > 0 ? (
             renderedPopularGames
           ) : (
-            "No games found!"
+            <p className="text-white text-center">No games found!</p>
           )}
         </div>
       </section>
@@ -80,7 +99,7 @@ const HomePage = () => {
         ) : genres?.length > 0 ? (
           <Tabs sliceValue={9} data={genres} />
         ) : (
-          "No genres found!"
+          <div className="text-white text-center">No genres found!</div>
         )}
       </section>
     </HomeWrapper>
@@ -92,12 +111,24 @@ export default HomePage;
 const HomeWrapper = styled.div`
   .sc-popular {
     background-color: var(--clr-violet-dark-active);
+    min-height: 60vh;
+    
     .section-btn {
       margin-top: 60px;
+    }
+
+    .error-message {
+      padding: 40px 20px;
+      
+      p {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
     }
   }
 
   .sc-genres {
     background-color: var(--clr-violet-dark-active);
+    min-height: 60vh;
   }
 `;

@@ -10,40 +10,79 @@ import { StarRating } from "../common";
 
 const GenreItem = ({ gameItem }) => {
   const [gameData, setGameData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async() => {
-      const { data } = await axios.get(`${apiURL.gamesURL }/${gameItem.id}?${API_KEY}`);
-      setGameData(data);
+      try {
+        setLoading(true);
+        const { data } = await axios.get(
+          `${apiURL.gamesURL}/${gameItem.id}?key=${API_KEY}`
+        );
+        setGameData(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching game data:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    fetchData();
-  }, []);
+    if (gameItem?.id) {
+      fetchData();
+    }
+  }, [gameItem.id]);
+
+  if (loading) {
+    return (
+      <GenreItemWrapper className='card'>
+        <div className='card-loading text-white text-center'>
+          Loading...
+        </div>
+      </GenreItemWrapper>
+    );
+  }
+
+  if (error) {
+    return (
+      <GenreItemWrapper className='card'>
+        <div className='card-error text-white text-center'>
+          Error loading game
+        </div>
+      </GenreItemWrapper>
+    );
+  }
 
   return (
     <GenreItemWrapper className='card'>
       <div className='card-top img-fit-cover'>
-        <img src = { gameData?.background_image} alt = { gameData?.name} />
-        <StarRating rating = { gameData?.rating} />
-        <div className='ratings-count'>{ gameData?.ratings_count } <BsStar className='ms-1' size = { 12 } /></div>
+        <img src={gameData?.background_image} alt={gameData?.name} />
+        <StarRating rating={gameData?.rating} />
+        <div className='ratings-count'>
+          {gameData?.ratings_count} <BsStar className='ms-1' size={12} />
+        </div>
       </div>
       <div className='card-bottom'>
         <h4 className='text-white text-uppercase card-title'>
-          { gameData?.name }
+          {gameData?.name}
         </h4>
 
         <div className='block-wrap'>
           <div className='details-group'>
             <div className='details-item d-flex align-items-center'>
               <p className='details-item-name fw-6'>Release Date:&nbsp;</p>
-              <p className='details-item-value'>{ gameData?.released}</p>
+              <p className='details-item-value'>{gameData?.released || 'N/A'}</p>
             </div>
             <div className='details-item d-flex align-items-center'>
               <p className='details-item-name fw-6'>Updated:&nbsp;</p>
-              <p className='details-item-value'>{ gameData?.updated}</p>
+              <p className='details-item-value'>{gameData?.updated || 'N/A'}</p>
             </div>
           </div>
-          <Link to = {`/games/${gameData?.id}`} className='card-button text-uppercase mt-3'>see more</Link>
+          <Link to={`/games/${gameData?.id}`} className='card-button text-uppercase mt-3'>
+            see more
+          </Link>
         </div>
       </div>
     </GenreItemWrapper>
@@ -57,17 +96,26 @@ GenreItem.propTypes = {
 }
 
 const GenreItemWrapper = styled.div`
-    display: flex;
+  display: flex;
   flex-direction: column;
 
-  .card-top{
+  .card-loading,
+  .card-error {
+    padding: 40px 20px;
+    background-color: var(--clr-violet-light);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-top {
     height: 280px;
     overflow: hidden;
     position: relative;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.27) 92.08%);
-    position: relative;
 
-    &::after{
+    &::after {
       content: "";
       position: absolute;
       top: 0;
@@ -77,7 +125,7 @@ const GenreItemWrapper = styled.div`
       background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
     }
 
-    .ratings-count{
+    .ratings-count {
       position: absolute;
       left: 18px;
       bottom: 10px;
@@ -90,12 +138,12 @@ const GenreItemWrapper = styled.div`
     }
   }
 
-  .card-bottom{
+  .card-bottom {
     flex: 1;
     background-color: var(--clr-violet-light);
     padding: 20px 18px;
 
-    .card-title{
+    .card-title {
       font-size: 18px;
       font-weight: 800px;
       font-family: var(--font-family-poppins)!important;
@@ -103,7 +151,7 @@ const GenreItemWrapper = styled.div`
       margin-bottom: 10px;
     }
 
-    .card-button{
+    .card-button {
       height: 34px;
       text-align: center;
       border: 1px solid var(--clr-green-normal);
@@ -116,13 +164,13 @@ const GenreItemWrapper = styled.div`
       align-items: center;
       transition: var(--transition-default);
 
-      &:hover{
+      &:hover {
         background-color: var(--clr-green-normal);
       }
     }
   }
 
-  .details-group{
+  .details-group {
     padding-top: 12px;
     color: rgba(255, 255, 255, 0.6);
     font-size: 14px;
