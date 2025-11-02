@@ -126,22 +126,33 @@ npm run dev
 <img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/a080ff8c-fb86-4642-9042-e4ab491deeaa" />
 
 
-Kemudian buka alamat yang muncul di terminal (biasanya http://localhost:5173
-) untuk melihat aplikasi berjalan di browser.
-Kesesuaian Rubrik
-CPMK0501: Form, Tabel, CSS
-Form “Contact Us” memiliki >5 input berbeda dan validasi HTML5.
-Tabel di halaman “Games” menampilkan kolom: Judul, Rating, Platform, dan Genre.
-Menggunakan Tailwind CSS dengan variabel warna global dan sistem tema (dark/light).
-Desain sepenuhnya responsif dan mobile-friendly.
-CPMK0502: HTML, JavaScript, React
-Struktur HTML5 semantik (header, main, section, footer).
-Penggunaan modern JavaScript : arrow function, async/await, destructuring, template literal.
-React Hooks: useState, useEffect, useParams, useNavigate.
-Komponen terpisah per fungsi (reusable & maintainable).
-Integrasi API eksternal (RAWG.io) dan rendering dinamis.
-State lokal untuk pagination, filter, dan theme.
-LocalStorage digunakan untuk menyimpan preferensi tema (dark/light).
+Kemudian buka alamat yang muncul di terminal 
+
+```
+(http://localhost:5173)
+```
+
+untuk melihat aplikasi berjalan di browser.
+
+Kriteria Penilaian
+CPMK0501: Tabel, Form, CSS - 45 poin
+Aspek	Bobot	Kriteria
+1. Form Implementation	12	Form dengan minimal 5 input berbeda, validation menggunakan HTML5 attributes, form submission handling dengan state management
+2. Table Implementation	12	Tabel data dinamis dengan minimal 3 kolom, data dari API, formatting yang baik
+3. CSS Styling	21	Minimal 3 jenis selector, kombinasi selector, pseudo-classes, responsive design dengan media queries, Flexbox atau CSS Grid
+
+CPMK0502: HTML, JavaScript, ReactJS - 55 poin
+Aspek	Bobot	Kriteria
+1. HTML5 Structure	5	DOCTYPE HTML5, semantic tags, meta tags lengkap, accessibility attributes
+2. Modern JavaScript	20	Arrow functions, template literals, destructuring, spread operators, array methods, async await
+3. React Implementation	20	Functional components, useState dan useEffect, props passing, conditional rendering, event handling, minimal 4 components
+4. API Integration	10	Fetch data dari API, loading state, error handling, data transformation
+
+Bonus: Deployment dan Documentation - 10 poin
+Aspek	Bobot	Kriteria
+1. GitHub Repository	4	Repository public, struktur folder baik, minimal 10 commits dengan message jelas
+2. README Documentation	2	README lengkap dengan nama, NIM, deskripsi, cara instalasi, link deployment, screenshot
+3. Vercel Deployment	4	Aplikasi berhasil di-deploy dan berfungsi dengan baik
 
 👨‍💻 Author
 Andryano Shevchenko Limbong 🐑
