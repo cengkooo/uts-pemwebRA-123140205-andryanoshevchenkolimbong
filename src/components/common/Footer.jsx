@@ -9,7 +9,7 @@ const Footer = () => {
           <div className='footer-grid'>
             <div className='footer-column'>
               <Link to="/" className='footer-brand text-white text-uppercase'>
-                &diams;Nexura&diams;
+                &#x1F411; Peternak Domba &#x1F411;
               </Link>
               <p className='footer-description'>
                 Enter the world where games and dreams collide.
@@ -35,7 +35,7 @@ const Footer = () => {
           </div>
 
           <div className='footer-bottom'>
-            <p className='copyright'>© 2024 Games Database. All rights reserved.</p>
+            <p className='copyright'>© Peternak Domba - Andryano Shevchenko Limbong - 123140205.</p>
             <p className='powered-by'>Powered by RAWG API</p>
           </div>
         </div>
