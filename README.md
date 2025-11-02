@@ -129,6 +129,7 @@ bashnpm run dev
 Konfigurasi API
 RAWG API key dikonfigurasi di src/api/api_key.js:
 javascriptexport const API_KEY = "b7aa4ec2db5b4786ae71522bcceaa596";
+
 Konfigurasi Base URL
 API base URL diatur di src/api/axios.js:
 javascriptimport axios from 'axios';
