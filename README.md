@@ -122,7 +122,9 @@ Jalankan development server
 
 bashnpm run dev
 
-![Uploading carbon.png…]()
+
+<img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/a080ff8c-fb86-4642-9042-e4ab491deeaa" />
+
 
 
 🔧 Konfigurasi Environment
