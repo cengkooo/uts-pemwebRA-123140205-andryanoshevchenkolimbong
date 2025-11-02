@@ -163,3 +163,7 @@ Andryano Shevchenko Limbong 🐑
 NIM: 123140205
 Kelas: Pemrograman Aplikasi Website RA
 Institution: Institut Teknologi Sumatera**
+
+**REFERENSI CODE AND VERCEL THANK YOU FOR**
+YT: @RAWG , @GeekProbin , @CodeCraftStudio , @fahruul.c
+
