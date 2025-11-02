@@ -19,6 +19,7 @@ import { STATUS } from '../../utils/status';
 import { GameList } from '../../components/game';
 import PlatformFilter from '../../components/common/PlatformFilter';
 import GenreFilter from '../../components/common/GenreFilter';
+import SortFilter from '../../components/common/SortFilter';
 
 const GameAllPage = () => {
   const dispatch = useDispatch();
@@ -34,13 +35,12 @@ const GameAllPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState('');
+  const [selectedSort, setSelectedSort] = useState('');
 
-  // Fetch genres on mount
   useEffect(() => {
     dispatch(fetchAsyncGenres());
   }, [dispatch]);
 
-  // Fetch games when filters change
   useEffect(() => {
     const params = {
       page,
@@ -55,8 +55,12 @@ const GameAllPage = () => {
       params.genres = selectedGenre;
     }
 
+    if (selectedSort) {
+      params.ordering = selectedSort;
+    }
+
     dispatch(fetchAsyncGames(params));
-  }, [dispatch, page, searchQuery, selectedPlatforms, selectedGenre]);
+  }, [dispatch, page, searchQuery, selectedPlatforms, selectedGenre, selectedSort]);
 
   const pageHandler = (pageValue) => setPage(pageValue);
 
@@ -75,14 +79,41 @@ const GameAllPage = () => {
     setPage(1);
   };
 
+  const handleSortChange = (sortValue) => {
+    setSelectedSort(sortValue);
+    setPage(1);
+  };
+
   const handleClearFilters = () => {
     setSearchQuery('');
     setSelectedPlatforms([]);
     setSelectedGenre('');
+    setSelectedSort('');
     setPage(1);
   };
 
-  const hasActiveFilters = searchQuery || selectedPlatforms.length > 0 || selectedGenre;
+  const hasActiveFilters = searchQuery || selectedPlatforms.length > 0 || selectedGenre || selectedSort;
+
+  const getActiveFilterNames = () => {
+    const filters = [];
+    if (selectedPlatforms.length > 0) filters.push(`${selectedPlatforms.length} platform(s)`);
+    if (selectedGenre) {
+      const genre = genres?.find(g => g.id === parseInt(selectedGenre));
+      if (genre) filters.push(`Genre: ${genre.name}`);
+    }
+    if (selectedSort) {
+      const sortLabels = {
+        '-rating': 'Rating: High to Low',
+        'rating': 'Rating: Low to High',
+        '-released': 'Newest First',
+        'released': 'Oldest First',
+        'name': 'Name: A-Z',
+        '-name': 'Name: Z-A'
+      };
+      filters.push(`Sort: ${sortLabels[selectedSort]}`);
+    }
+    return filters;
+  };
 
   return (
     <GameAllPageWrapper>
@@ -95,34 +126,53 @@ const GameAllPage = () => {
 
           <SearchBar onSearch={handleSearch} />
 
-          {/* Filters Section */}
+          {/* Filters Section - Horizontal Layout */}
           <div className="filters-section">
-            <div className="filters-grid">
-              <PlatformFilter 
-                selectedPlatforms={selectedPlatforms}
-                onPlatformChange={handlePlatformChange}
-              />
-              
-              {genresStatus === STATUS.SUCCEEDED && genres?.length > 0 && (
-                <GenreFilter 
-                  genres={genres}
-                  selectedGenre={selectedGenre}
-                  onGenreChange={handleGenreChange}
+            <div className="filters-row">
+              {/* Platform Filter - Left */}
+              <div className="filter-col filter-col-platforms">
+                <PlatformFilter 
+                  selectedPlatforms={selectedPlatforms}
+                  onPlatformChange={handlePlatformChange}
                 />
-              )}
+              </div>
+              
+              {/* Genre & Sort Filters - Right */}
+              <div className="filter-col filter-col-side">
+                {genresStatus === STATUS.SUCCEEDED && genres?.length > 0 && (
+                  <GenreFilter 
+                    genres={genres}
+                    selectedGenre={selectedGenre}
+                    onGenreChange={handleGenreChange}
+                  />
+                )}
+                
+                <SortFilter 
+                  selectedSort={selectedSort}
+                  onSortChange={handleSortChange}
+                />
+              </div>
             </div>
 
+            {/* Active Filters Display */}
             {hasActiveFilters && (
               <div className="active-filters">
-                <p className="text-white">
-                  Active filters applied
-                  <button 
-                    className="clear-filters-btn ms-3"
-                    onClick={handleClearFilters}
-                  >
-                    Clear All Filters
-                  </button>
-                </p>
+                <div className="active-filters-content">
+                  <span className="active-filters-label">ACTIVE FILTERS:</span>
+                  <div className="active-filters-tags">
+                    {getActiveFilterNames().map((filter, index) => (
+                      <span key={index} className="filter-tag">
+                        {filter}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <button 
+                  className="clear-filters-btn"
+                  onClick={handleClearFilters}
+                >
+                  CLEAR ALL FILTERS
+                </button>
               </div>
             )}
           </div>
@@ -139,7 +189,8 @@ const GameAllPage = () => {
                   page, 
                   search: searchQuery,
                   platforms: selectedPlatforms.join(','),
-                  genres: selectedGenre
+                  genres: selectedGenre,
+                  ordering: selectedSort
                 }))}
               >
                 Retry
@@ -147,6 +198,11 @@ const GameAllPage = () => {
             </div>
           ) : games?.length > 0 ? (
             <>
+              <div className="results-count">
+                <p className="text-white">
+                  Showing {games.length} games
+                </p>
+              </div>
               <GameList games={games} />
               <Pagination 
                 pageHandler={pageHandler} 
@@ -163,7 +219,7 @@ const GameAllPage = () => {
                   className="section-btn mt-4"
                   onClick={handleClearFilters}
                 >
-                  Clear Filters
+                  Clear All Filters
                 </button>
               )}
             </div>
@@ -184,20 +240,37 @@ const GameAllPageWrapper = styled.div`
     padding-top: 65px;
 
     .filters-section {
-      margin-bottom: 60px;
+      margin-bottom: 48px;
       padding: 32px;
       background-color: var(--clr-gray-darkest);
       border: 1px solid var(--clr-gray-medium);
       border-radius: 12px;
     }
 
-    .filters-grid {
+    .filters-row {
       display: grid;
+      grid-template-columns: 1fr auto auto;
       gap: 32px;
+      align-items: start;
 
-      @media screen and (min-width: 992px) {
-        grid-template-columns: 2fr 1fr;
-        align-items: start;
+      @media screen and (max-width: 1200px) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    .filter-col-platforms {
+      min-width: 0; /* Allow shrinking */
+    }
+
+    .filter-col-side {
+      display: flex;
+      gap: 24px;
+      align-items: start;
+
+      @media screen and (max-width: 768px) {
+        flex-direction: column;
+        width: 100%;
       }
     }
 
@@ -205,14 +278,43 @@ const GameAllPageWrapper = styled.div`
       margin-top: 24px;
       padding-top: 24px;
       border-top: 1px solid var(--clr-gray-medium);
-      
-      p {
-        font-size: 14px;
-        color: var(--clr-gray-lighter);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+
+      .active-filters-content {
+        flex: 1;
         display: flex;
         align-items: center;
+        gap: 12px;
         flex-wrap: wrap;
-        gap: 16px;
+      }
+
+      .active-filters-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--clr-gray-lighter);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .active-filters-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .filter-tag {
+        display: inline-block;
+        background-color: var(--clr-gray-medium);
+        border: 1px solid var(--clr-gray-light);
+        color: var(--clr-white);
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 500;
       }
 
       .clear-filters-btn {
@@ -221,15 +323,28 @@ const GameAllPageWrapper = styled.div`
         border: 1px solid var(--clr-gray-light);
         padding: 8px 20px;
         border-radius: 20px;
-        font-size: 13px;
-        font-weight: 500;
+        font-size: 12px;
+        font-weight: 600;
         transition: var(--transition-default);
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
         
         &:hover {
           background-color: var(--clr-white);
           color: var(--clr-black);
           border-color: var(--clr-white);
         }
+      }
+    }
+
+    .results-count {
+      margin-bottom: 24px;
+      
+      p {
+        font-size: 14px;
+        color: var(--clr-gray-lighter);
+        font-weight: 500;
       }
     }
 
@@ -241,6 +356,19 @@ const GameAllPageWrapper = styled.div`
         font-size: 18px;
         margin-bottom: 20px;
         color: var(--clr-gray-lighter);
+      }
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    .sc-games {
+      .active-filters {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .clear-filters-btn {
+          width: 100%;
+        }
       }
     }
   }

@@ -5,10 +5,10 @@ import { API_KEY } from "../../api/api_key";
 
 export const fetchAsyncGenres = createAsyncThunk(
   'genres/fetch', 
-  async (page = 1) => {
+  async (params = {}) => {
     try {
       const { data } = await axios.get(
-        `${apiURL.genresURL}?key=${API_KEY}&page=${page}`
+        `${apiURL.genresURL}?key=${API_KEY}&page=${params.page || 1}`
       );
       return data;
     } catch (error) {

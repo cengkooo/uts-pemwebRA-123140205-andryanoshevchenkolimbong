@@ -10,3 +10,4 @@ export { default as StarRating } from "./StarRating";
 export { default as SearchBar } from "./SearchBar";
 export { default as PlatformFilter } from "./PlatformFilter";
 export { default as GenreFilter } from "./GenreFilter";
+export { default as SortFilter } from "./SortFilter";

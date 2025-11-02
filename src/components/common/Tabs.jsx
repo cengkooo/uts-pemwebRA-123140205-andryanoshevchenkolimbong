@@ -9,12 +9,12 @@ const Tabs = ({ data }) => {
   const [tabButtonStatus, setTabButtonStatus] = useState(false);
 
   const tabClickHandler = (id) => {
-    data.map(item => {
+    data.forEach(item => {
       if(item.id === id){
         setActiveTab(item);
       }
-    })
-  }
+    });
+  };
 
   const tabButtonsHandler = () => setTabButtonStatus(prevStatus => !prevStatus);
 
@@ -23,48 +23,57 @@ const Tabs = ({ data }) => {
       <div className='container'>
         <div className='tabs-content'>
           <ul className={`tabs-buttons ${tabButtonStatus ? "show" : ""}`}>
-            <button type="button" className='tabs-buttons-close bg-white d-flex align-items-center justify-content-center' onClick={ tabButtonsHandler }>
-              <AiOutlineMenu size = { 22 } />
+            <button 
+              type="button" 
+              className='tabs-buttons-close bg-white d-flex align-items-center justify-content-center' 
+              onClick={tabButtonsHandler}
+            >
+              <AiOutlineMenu size={22} />
             </button>
-            {
-              data.map(item => {
-                return (
-                  <li key = {item?.id} className={`tabs-button ${item?.id === activeTab.id ? 'tabs-active' : ""}`}>
-                    <button className='text-white' type="button" onClick={() => tabClickHandler(item?.id)}>{ item?.name }</button>
-                  </li>
-                )
-              })
-            }
+            {data.map(item => (
+              <li key={item?.id} className={`tabs-button ${item?.id === activeTab.id ? 'tabs-active' : ""}`}>
+                <button 
+                  className='text-white' 
+                  type="button" 
+                  onClick={() => tabClickHandler(item?.id)}
+                >
+                  {item?.name}
+                </button>
+              </li>
+            ))}
           </ul>
 
           <div className='tabs-body'>
             <div className='card-list'>
-              {
-                activeTab?.games?.slice(0, 6).map(item => (
-                  <GenreItem key = {item.id} gameItem = { item } />
+              {activeTab?.games?.length > 0 ? (
+                activeTab.games.slice(0, 6).map(item => (
+                  <GenreItem key={item.id} gameItem={item} />
                 ))
-              }
+              ) : (
+                <div className='no-games-message text-white text-center'>
+                  <p>No games available for this genre with selected filters.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
     </TabsWrapper>
-  )
-}
+  );
+};
 
 export default Tabs;
 
 Tabs.propTypes = {
-  data: PropTypes.array,
-  sliceValue: PropTypes.number
-}
+  data: PropTypes.array.isRequired
+};
 
 const TabsWrapper = styled.div`
   position: relative;
   min-height: 800px;
   background-color: var(--clr-black);
 
-  .tabs-buttons{
+  .tabs-buttons {
     position: absolute;
     left: 0;
     top: 0;
@@ -78,7 +87,7 @@ const TabsWrapper = styled.div`
     max-height: 100vh;
     overflow-y: auto;
 
-    .tabs-buttons-close{
+    .tabs-buttons-close {
       position: absolute;
       right: -40px;
       top: 0;
@@ -88,27 +97,27 @@ const TabsWrapper = styled.div`
       background-color: var(--clr-gray-dark);
       border: 1px solid var(--clr-gray-medium);
 
-      &:hover{
+      &:hover {
         background-color: var(--clr-white);
         color: var(--clr-black);
       }
     }
 
-    @media screen and (max-width: 1280px){
+    @media screen and (max-width: 1280px) {
       transform: translateX(-100%);
 
-      .tabs-buttons-close{
+      .tabs-buttons-close {
         display: flex;
       }
 
-      &.show{
+      &.show {
         transform: translateX(0);
       }
     }
   }
 
-  .tabs-button{
-    button{
+  .tabs-button {
+    button {
       padding: 16px 30px;
       font-family: var(--font-family-primary);
       font-weight: 500;
@@ -120,28 +129,38 @@ const TabsWrapper = styled.div`
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    &:hover:not(.tabs-active){
+    &:hover:not(.tabs-active) {
       background-color: var(--clr-gray-medium);
     }
   }
 
-  .tabs-active{
+  .tabs-active {
     background-color: var(--clr-white);
-    button{
+    button {
       color: var(--clr-black);
     }
   }
 
-  .tabs-body{
+  .tabs-body {
     margin-left: 260px;
     padding: 20px;
 
-    @media screen and (max-width: 1280px){
+    @media screen and (max-width: 1280px) {
       margin-left: 0;
     }
   }
 
-  @media screen and (max-width: 768px){
+  .no-games-message {
+    grid-column: 1 / -1;
+    padding: 60px 20px;
+
+    p {
+      font-size: 16px;
+      color: var(--clr-gray-lightest);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
     min-height: 600px;
   }
 `;

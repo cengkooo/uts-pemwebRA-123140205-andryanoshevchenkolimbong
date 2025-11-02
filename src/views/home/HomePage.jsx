@@ -3,8 +3,9 @@ import {
   Banner,
   Preloader,
   Title,
-  Tabs,
   SearchBar,
+  PlatformFilter,
+  SortFilter,
 } from "../../components/common/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,18 +17,22 @@ import {
   selectAllGenres,
   selectAllGenresStatus
 } from "../../redux/store/genreSlice";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { fetchAsyncGames } from "../../redux/utils/gameUtils";
 import { fetchAsyncGenres } from "../../redux/utils/genreUtils";
 import { STATUS } from "../../utils/status";
 import { GameList } from "../../components/game/index";
 import { Link, useNavigate } from "react-router-dom";
+import { GenreItem } from "../../components/genre";
 
-// Platform constants
-const PLATFORMS = [
-  { id: 4, label: "PC" },
-  { id: 187, label: "PlayStation" },
-  { id: 1, label: "Xbox" },
+// Sort options reference for display
+const SORT_OPTIONS = [
+  { value: '-rating', label: 'Rating: High to Low' },
+  { value: 'rating', label: 'Rating: Low to High' },
+  { value: '-released', label: 'Newest First' },
+  { value: 'released', label: 'Oldest First' },
+  { value: 'name', label: 'Name: A-Z' },
+  { value: '-name', label: 'Name: Z-A' }
 ];
 
 const HomePage = () => {
@@ -40,40 +45,129 @@ const HomePage = () => {
   const genresStatus = useSelector(selectAllGenresStatus);
   
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
+  const [selectedSort, setSelectedSort] = useState('-rating');
+  const [activeGenreTab, setActiveGenreTab] = useState(null);
+  const [genreGames, setGenreGames] = useState({});
+  const [loadingGenreGames, setLoadingGenreGames] = useState(false);
 
+  // Fetch featured games (no filters)
   useEffect(() => {
-    // Fetch popular games (tanpa filter platform)
     dispatch(fetchAsyncGames({ 
       page: 1, 
       pageSize: 9,
       ordering: '-rating'
     }));
+  }, [dispatch]);
 
-    // Fetch genres with platform filter
-    const params = { page: 1 };
-    if (selectedPlatforms.length > 0) {
-      params.platforms = selectedPlatforms.join(',');
+  // Fetch all genres (without filters - genres endpoint doesn't support filtering)
+  useEffect(() => {
+    dispatch(fetchAsyncGenres({ page: 1 }));
+  }, [dispatch]);
+
+  // Set active tab when genres are loaded
+  useEffect(() => {
+    if (genres && genres.length > 0 && !activeGenreTab) {
+      setActiveGenreTab(genres[0]);
     }
-    dispatch(fetchAsyncGenres(params));
-  }, [dispatch, selectedPlatforms]);
+  }, [genres, activeGenreTab]);
+
+  // Fetch games for active genre with filters
+  useEffect(() => {
+    if (!activeGenreTab) return;
+
+    const fetchGenreGames = async () => {
+      const cacheKey = `${activeGenreTab.id}-${selectedPlatforms.join(',')}-${selectedSort}`;
+      
+      // Check if already cached
+      if (genreGames[cacheKey]) {
+        return;
+      }
+
+      setLoadingGenreGames(true);
+      
+      try {
+        const params = {
+          genres: activeGenreTab.id,
+          ordering: selectedSort,
+          page_size: 6
+        };
+
+        if (selectedPlatforms.length > 0) {
+          params.platforms = selectedPlatforms.join(',');
+        }
+
+        const response = await dispatch(fetchAsyncGames(params)).unwrap();
+        
+        setGenreGames(prev => ({
+          ...prev,
+          [cacheKey]: response.results || []
+        }));
+      } catch (error) {
+        console.error('Error fetching genre games:', error);
+        setGenreGames(prev => ({
+          ...prev,
+          [cacheKey]: []
+        }));
+      } finally {
+        setLoadingGenreGames(false);
+      }
+    };
+
+    fetchGenreGames();
+  }, [activeGenreTab, selectedPlatforms, selectedSort, dispatch, genreGames]);
 
   const handleSearch = (query) => {
     navigate(`/games?search=${query}`);
   };
 
-  const handlePlatformChange = (platformId) => {
-    setSelectedPlatforms(prev => {
-      if (prev.includes(platformId)) {
-        return prev.filter(id => id !== platformId);
-      } else {
-        return [...prev, platformId];
-      }
-    });
+  const handlePlatformChange = (platforms) => {
+    setSelectedPlatforms(platforms);
+    // Clear cache when filters change
+    setGenreGames({});
   };
 
-  const handleClearPlatformFilter = () => {
-    setSelectedPlatforms([]);
+  const handleSortChange = (sortValue) => {
+    setSelectedSort(sortValue);
+    // Clear cache when filters change
+    setGenreGames({});
   };
+
+  const handleClearFilters = () => {
+    setSelectedPlatforms([]);
+    setSelectedSort('-rating');
+    setGenreGames({});
+  };
+
+  const handleGenreTabClick = (genre) => {
+    setActiveGenreTab(genre);
+  };
+
+  const hasActiveFilters = selectedPlatforms.length > 0 || selectedSort !== '-rating';
+
+  const getActiveFilterNames = () => {
+    const filters = [];
+    if (selectedPlatforms.length > 0) {
+      const platformNames = {
+        '4': 'PC',
+        '187': 'PlayStation',
+        '1': 'Xbox'
+      };
+      const names = selectedPlatforms.map(id => platformNames[id]).filter(Boolean);
+      filters.push(`Platforms: ${names.join(', ')}`);
+    }
+    if (selectedSort !== '-rating') {
+      const sortLabel = SORT_OPTIONS.find(s => s.value === selectedSort)?.label;
+      if (sortLabel) filters.push(`Sort: ${sortLabel}`);
+    }
+    return filters;
+  };
+
+  // Get current genre games
+  const currentGenreGames = useMemo(() => {
+    if (!activeGenreTab) return [];
+    const cacheKey = `${activeGenreTab.id}-${selectedPlatforms.join(',')}-${selectedSort}`;
+    return genreGames[cacheKey] || [];
+  }, [activeGenreTab, selectedPlatforms, selectedSort, genreGames]);
 
   const renderedPopularGames = (
     <>
@@ -124,41 +218,51 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Top Genres Section with Platform Filter */}
+      {/* Top Genres Section with Filters */}
       <section className="section sc-genres">
         <div className='container'>
           <Title
             titleName={{ firstText: "Top", secondText: "Genres" }}
           />
 
-          {/* Platform Filter Panel */}
-          <div className='platform-filter-panel'>
-            <div className='filter-header'>
-              <span className='filter-icon'>⚙</span>
-              <h3 className='filter-title'>PLATFORMS</h3>
-            </div>
-            
-            <div className='filter-options'>
-              {PLATFORMS.map(({ id, label }) => (
-                <label key={id} className='filter-label'>
-                  <input
-                    type='checkbox'
-                    checked={selectedPlatforms.includes(id)}
-                    onChange={() => handlePlatformChange(id)}
-                    className='filter-checkbox'
-                  />
-                  <span className='filter-text'>{label}</span>
-                </label>
-              ))}
+          {/* Filter Panel */}
+          <div className='filter-panel'>
+            <div className='filter-row'>
+              <div className='filter-col'>
+                <PlatformFilter 
+                  selectedPlatforms={selectedPlatforms}
+                  onPlatformChange={handlePlatformChange}
+                />
+              </div>
+
+              <div className='filter-col'>
+                <SortFilter 
+                  selectedSort={selectedSort}
+                  onSortChange={handleSortChange}
+                />
+              </div>
             </div>
 
-            {selectedPlatforms.length > 0 && (
-              <button 
-                className='clear-platform-btn'
-                onClick={handleClearPlatformFilter}
-              >
-                CLEAR PLATFORM FILTER
-              </button>
+            {/* Active Filters Display */}
+            {hasActiveFilters && (
+              <div className='active-filters'>
+                <div className='active-filters-content'>
+                  <span className='active-filters-label'>ACTIVE FILTERS:</span>
+                  <div className='active-filters-tags'>
+                    {getActiveFilterNames().map((filter, index) => (
+                      <span key={index} className='filter-tag'>
+                        {filter}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <button 
+                  className='clear-filters-btn'
+                  onClick={handleClearFilters}
+                >
+                  CLEAR ALL FILTERS
+                </button>
+              </div>
             )}
           </div>
 
@@ -166,18 +270,59 @@ const HomePage = () => {
           {genresStatus === STATUS.LOADING ? (
             <Preloader />
           ) : genres?.length > 0 ? (
-            <Tabs data={genres} />
+            <div className='genres-tabs-wrapper bg-white'>
+              <div className='genres-sidebar'>
+                <ul className='genre-list'>
+                  {genres.map(genre => (
+                    <li 
+                      key={genre.id} 
+                      className={`genre-item ${activeGenreTab?.id === genre.id ? 'active' : ''}`}
+                    >
+                      <button 
+                        className='genre-button text-white' 
+                        type="button" 
+                        onClick={() => handleGenreTabClick(genre)}
+                      >
+                        {genre.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className='genres-content'>
+                {loadingGenreGames ? (
+                  <div className='loading-state'>
+                    <Preloader />
+                  </div>
+                ) : currentGenreGames.length > 0 ? (
+                  <div className='card-list'>
+                    {currentGenreGames.map(game => (
+                      <GenreItem key={game.id} gameItem={game} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className='no-games-message text-white text-center'>
+                    <p>
+                      {hasActiveFilters 
+                        ? 'No games found for this genre with selected filters.'
+                        : 'No games available for this genre.'}
+                    </p>
+                    {hasActiveFilters && (
+                      <button 
+                        className="section-btn mt-4"
+                        onClick={handleClearFilters}
+                      >
+                        Clear Filters
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
           ) : (
             <div className="no-genres text-white text-center">
-              <p>No genres found with selected platform!</p>
-              {selectedPlatforms.length > 0 && (
-                <button 
-                  className="section-btn mt-4"
-                  onClick={handleClearPlatformFilter}
-                >
-                  Show All Genres
-                </button>
-              )}
+              <p>No genres available.</p>
             </div>
           )}
         </div>
@@ -242,12 +387,11 @@ const HomeWrapper = styled.div`
     padding-top: 0;
     padding-bottom: 100px;
 
-    /* Platform Filter Panel */
-    .platform-filter-panel {
+    .filter-panel {
       background-color: var(--clr-gray-dark);
       border: 1px solid var(--clr-gray-medium);
-      border-radius: 8px;
-      padding: 24px;
+      border-radius: 12px;
+      padding: 32px;
       margin-bottom: 40px;
       transition: var(--transition-default);
 
@@ -256,91 +400,170 @@ const HomeWrapper = styled.div`
       }
     }
 
-    .filter-header {
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+
+      @media screen and (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    .filter-col {
+      min-width: 0;
+    }
+
+    .active-filters {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--clr-gray-medium);
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+
+      .active-filters-content {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .active-filters-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--clr-gray-lighter);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .active-filters-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .filter-tag {
+        display: inline-block;
+        background-color: var(--clr-gray-medium);
+        border: 1px solid var(--clr-gray-light);
+        color: var(--clr-white);
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .clear-filters-btn {
+        background-color: transparent;
+        color: var(--clr-white);
+        border: 1px solid var(--clr-gray-light);
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        transition: var(--transition-default);
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        
+        &:hover {
+          background-color: var(--clr-white);
+          color: var(--clr-black);
+          border-color: var(--clr-white);
+        }
+      }
     }
 
-    .filter-icon {
-      font-size: 20px;
-      color: var(--clr-white);
+    .genres-tabs-wrapper {
+      position: relative;
+      min-height: 800px;
+      background-color: var(--clr-black);
+      display: grid;
+      grid-template-columns: 240px 1fr;
+
+      @media screen and (max-width: 1280px) {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .filter-title {
-      font-family: var(--font-family-heading);
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--clr-white);
-      letter-spacing: 0.1em;
+    .genres-sidebar {
+      background-color: var(--clr-gray-dark);
+      border-right: 1px solid var(--clr-gray-medium);
+      padding: 20px 0;
+      max-height: 800px;
+      overflow-y: auto;
+
+      @media screen and (max-width: 1280px) {
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid var(--clr-gray-medium);
+      }
+    }
+
+    .genre-list {
+      list-style: none;
+      padding: 0;
       margin: 0;
     }
 
-    .filter-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .filter-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      padding: 10px 18px;
-      border-radius: 8px;
-      background-color: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--clr-gray-medium);
-      transition: var(--transition-default);
-
-      &:hover {
-        border-color: var(--clr-white);
-        background-color: rgba(255, 255, 255, 0.05);
+    .genre-item {
+      .genre-button {
+        padding: 16px 30px;
+        font-family: var(--font-family-primary);
+        font-weight: 500;
+        font-size: 15px;
+        letter-spacing: 0.05em;
+        width: 100%;
+        text-align: start;
+        transition: var(--transition-default);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        background: transparent;
+        border: none;
+        cursor: pointer;
       }
-    }
 
-    .filter-checkbox {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-      border-radius: 4px;
-      accent-color: var(--clr-white);
-      transition: var(--transition-default);
-
-      &:focus {
-        outline: 2px solid var(--clr-white);
-        outline-offset: 2px;
+      &:hover:not(.active) {
+        background-color: var(--clr-gray-medium);
       }
-    }
 
-    .filter-text {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--clr-white);
-      user-select: none;
-      letter-spacing: 0.02em;
-    }
-
-    .clear-platform-btn {
-      width: 100%;
-      padding: 12px 24px;
-      background-color: transparent;
-      border: 2px solid var(--clr-gray-light);
-      color: var(--clr-white);
-      font-weight: 600;
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: var(--transition-default);
-      font-family: var(--font-family-heading);
-
-      &:hover {
+      &.active {
         background-color: var(--clr-white);
-        color: var(--clr-black);
-        border-color: var(--clr-white);
+        .genre-button {
+          color: var(--clr-black);
+        }
+      }
+    }
+
+    .genres-content {
+      padding: 20px;
+      min-height: 600px;
+    }
+
+    .loading-state {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+    }
+
+    .no-games-message {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      padding: 60px 20px;
+
+      p {
+        font-size: 16px;
+        color: var(--clr-gray-lightest);
+        margin-bottom: 20px;
       }
     }
 
@@ -357,16 +580,21 @@ const HomeWrapper = styled.div`
 
   @media screen and (max-width: 768px) {
     .sc-genres {
-      .platform-filter-panel {
+      .filter-panel {
         padding: 16px;
       }
 
-      .filter-options {
+      .active-filters {
         flex-direction: column;
+        align-items: flex-start;
+
+        .clear-filters-btn {
+          width: 100%;
+        }
       }
 
-      .filter-label {
-        width: 100%;
+      .genres-tabs-wrapper {
+        min-height: 600px;
       }
     }
   }
