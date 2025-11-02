@@ -28,7 +28,7 @@ const Footer = () => {
               <h4 className='footer-title'>Information</h4>
               <ul className='footer-links'>
                 <li><a href="https://rawg.io/apidocs" target='blank'>About</a></li>
-                <li><a href="mailto:andryano.produktivitas@email.com">Contact</a></li>
+                <li><a href="https://github.com/cengkooo">Contact</a></li>
                 <li><a href="https://rawg.io/apidocs#terms" target='blank'>Privacy Policy</a></li>
               </ul>
             </div>
