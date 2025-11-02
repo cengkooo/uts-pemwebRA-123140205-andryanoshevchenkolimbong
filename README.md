@@ -121,11 +121,9 @@ RAWG API key sudah termasuk: b7aa4ec2db5b4786ae71522bcceaa596
 Jalankan development server
 
 bashnpm run dev
-```
 
-<img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/c2b19dbe-95b4-4bbe-8fd1-0bfb75174eec" />
+![Uploading carbon.png…]()
 
-```
 
 🔧 Konfigurasi Environment
 Konfigurasi API
