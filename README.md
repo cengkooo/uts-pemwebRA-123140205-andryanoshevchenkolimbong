@@ -7,19 +7,6 @@ Kelas: Pemrograman Aplikasi Website RA**
 Aplikasi web modern dan minimalis untuk menemukan dan menjelajahi video game, didukung oleh RAWG Video Games Database API. Dibangun dengan React, Redux, dan styled-components dengan desain estetika hitam & putih yang elegan.
 📋 Daftar Isi
 
-Fitur
-Teknologi yang Digunakan
-Instalasi
-Struktur Proyek
-Konfigurasi Environment
-Skrip yang Tersedia
-Integrasi API
-Komponen Utama
-Manajemen State
-Arsitektur Styling
-Kesesuaian Rubrik
-Author
-
 ✨ Fitur
 🔍 Penemuan Game Lanjutan
 
@@ -102,47 +89,41 @@ npm (v8.0.0 atau lebih tinggi)
 
 Langkah-Langkah Setup
 
-Clone repository
-
+1. Clone repository
+   
+```
 bashgit clone https://github.com/cengkooo/peternak-domba.git
 cd peternak-domba
-
-Install dependencies
-
-bashnpm install
+```
 
 Konfigurasi API Key
 
+```
 Buka src/api/api_key.js
 RAWG API key sudah termasuk: b7aa4ec2db5b4786ae71522bcceaa596
 (Opsional) Dapatkan key Anda sendiri di RAWG API
-
-
-Jalankan development server
-
-bashnpm run dev
-
-
-<img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/a080ff8c-fb86-4642-9042-e4ab491deeaa" />
-
-⚙️ Cara Menjalankan
-1. Persiapan Lingkungan
-
-Pastikan sudah menginstal Node.js versi 18 atau lebih baru, serta memiliki npm atau bun sebagai package manager.
+```
 
 2. Instalasi Dependensi
 
 Jalankan perintah berikut untuk menginstal seluruh dependensi proyek:
 
+```
 npm install
 # atau
 bun install
+```
 
 3. Menjalankan dalam Mode Pengembangan
 
 Setelah instalasi selesai, jalankan proyek dengan perintah:
 
+```
 npm run dev
+```
+
+
+<img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/a080ff8c-fb86-4642-9042-e4ab491deeaa" />
 
 
 Kemudian buka alamat yang muncul di terminal (biasanya http://localhost:5173
