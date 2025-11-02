@@ -125,31 +125,28 @@ bashnpm run dev
 
 <img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/a080ff8c-fb86-4642-9042-e4ab491deeaa" />
 
-🚀 Cara Menjalankan LocalhostLangkah-Langkah Detail
-1️⃣ Pastikan Node.js TerinstallCek apakah Node.js sudah terinstall:bashnode --version
-npm --versionJika belum terinstall, download dari: https://nodejs.org/ (pilih versi LTS)
+⚙️ Cara Menjalankan
+1. Persiapan Lingkungan
 
-2️⃣ Clone atau Download ProjectOpsi A: Menggunakan Git
-bashgit clone https://github.com/cengkooo/peternak-domba.git
-cd peternak-dombaOpsi B: Download ZIP
+Pastikan sudah menginstal Node.js versi 18 atau lebih baru, serta memiliki npm atau bun sebagai package manager.
 
-Download project sebagai ZIP
-Extract ke folder pilihan Anda
-Buka terminal/command prompt di folder tersebut
+2. Instalasi Dependensi
 
-3️⃣ Install DependenciesJalankan perintah ini di terminal (pastikan Anda berada di folder project):bashnpm installTunggu sampai proses selesai (biasanya 1-3 menit tergantung koneksi internet)Output yang benar:
-added 500+ packages in 2mJika ada error:
-bash# Coba hapus node_modules dan package-lock.json lalu install ulang
-rm -rf node_modules package-lock.json
+Jalankan perintah berikut untuk menginstal seluruh dependensi proyek:
+
 npm install
+# atau
+bun install
 
-4️⃣ Jalankan Development Serverbashnpm run devOutput yang muncul:
-  VITE v4.4.5  ready in 500 ms
+3. Menjalankan dalam Mode Pengembangan
 
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: http://192.168.1.100:5173/
-  ➜  press h to show help5️⃣ Buka di BrowserBuka browser (Chrome, Firefox, Edge) dan akses:http://localhost:5173atau klik link yang muncul di terminal sambil menekan Ctrl (Windows/Linux) atau Cmd (Mac)
+Setelah instalasi selesai, jalankan proyek dengan perintah:
 
+npm run dev
+
+
+Kemudian buka alamat yang muncul di terminal (biasanya http://localhost:5173
+) untuk melihat aplikasi berjalan di browser.
 Kesesuaian Rubrik
 CPMK0501: Form, Tabel, CSS
 Form “Contact Us” memiliki >5 input berbeda dan validasi HTML5.
