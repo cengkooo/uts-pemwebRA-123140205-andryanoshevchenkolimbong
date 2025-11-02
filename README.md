@@ -125,231 +125,30 @@ bashnpm run dev
 
 <img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/a080ff8c-fb86-4642-9042-e4ab491deeaa" />
 
+🚀 Cara Menjalankan LocalhostLangkah-Langkah Detail
+1️⃣ Pastikan Node.js TerinstallCek apakah Node.js sudah terinstall:bashnode --version
+npm --versionJika belum terinstall, download dari: https://nodejs.org/ (pilih versi LTS)
 
+2️⃣ Clone atau Download ProjectOpsi A: Menggunakan Git
+bashgit clone https://github.com/cengkooo/peternak-domba.git
+cd peternak-dombaOpsi B: Download ZIP
 
-🔧 Konfigurasi Environment
-Konfigurasi API
-RAWG API key dikonfigurasi di src/api/api_key.js:
-javascriptexport const API_KEY = "b7aa4ec2db5b4786ae71522bcceaa596";
-Konfigurasi Base URL
-API base URL diatur di src/api/axios.js:
-javascriptimport axios from 'axios';
+Download project sebagai ZIP
+Extract ke folder pilihan Anda
+Buka terminal/command prompt di folder tersebut
 
-export default axios.create({
-    baseURL: "https://api.rawg.io/api/"
-});
-📜 Skrip yang Tersedia
-bash# Jalankan development server
-npm run dev
+3️⃣ Install DependenciesJalankan perintah ini di terminal (pastikan Anda berada di folder project):bashnpm installTunggu sampai proses selesai (biasanya 1-3 menit tergantung koneksi internet)Output yang benar:
+added 500+ packages in 2mJika ada error:
+bash# Coba hapus node_modules dan package-lock.json lalu install ulang
+rm -rf node_modules package-lock.json
+npm install
 
-# Build untuk produksi
-npm run build
+4️⃣ Jalankan Development Serverbashnpm run devOutput yang muncul:
+  VITE v4.4.5  ready in 500 ms
 
-# Preview production build
-npm run preview
-
-# Jalankan ESLint
-npm run lint
-🔌 Integrasi API
-Endpoint RAWG API yang Digunakan
-javascript// Games
-GET /games                    // Daftar game
-GET /games/:id               // Detail game
-GET /games/:id/screenshots   // Screenshot game
-
-// Genres
-GET /genres                  // Daftar genre
-
-// Query Parameters
-?key={API_KEY}              // Autentikasi
-?page={number}              // Pagination
-?page_size={number}         // Hasil per halaman
-?search={query}             // Pencarian game
-?platforms={ids}            // Filter berdasarkan platform
-?genres={id}                // Filter berdasarkan genre
-?ordering={field}           // Sort hasil
-Contoh API Calls
-javascript// Fetch games dengan filter
-fetchAsyncGames({
-  page: 1,
-  search: "zelda",
-  platforms: "4,187",  // PC, PS5
-  genres: "4",         // Action
-  ordering: "-rating"  // Rating tertinggi dulu
-})
-
-// Fetch detail game
-fetchAsyncGameDetails(gameId)
-
-// Fetch screenshot game
-fetchAsyncGameScreenshots(gameId)
-🧩 Komponen Utama
-HomePage (src/views/home/HomePage.jsx)
-
-Hero Banner: Section landing yang menarik perhatian
-Search Bar: Fungsionalitas pencarian yang prominent
-Featured Games: Showcase game dengan rating tertinggi
-Genre Tabs: Penelusuran interaktif berbasis genre
-Panel Filter: Filter platform dan sort
-Tampilan Filter Aktif: Umpan balik visual dari filter yang diterapkan
-
-GameAllPage (src/views/game/GameAllPage.jsx)
-
-Filter Lanjutan: Filtering multi-dimensi
-
-Checkbox platform
-Dropdown genre
-Opsi sort
-
-
-Integrasi Pencarian: Pencarian berbasis keyword
-Grid Game: Layout card responsif
-Pagination: Navigasi melalui hasil
-Loading States: Umpan balik pengguna yang halus
-
-GameDetailsPage (src/views/game/GameDetailsPage.jsx)
-
-Navigasi Breadcrumb: Kesadaran konteks
-Galeri Gambar: Screenshot berkualitas tinggi
-Informasi Detail: Data game yang komprehensif
-Interface Tab: Section konten yang terorganisir
-Tampilan Platform: Platform yang tersedia
-
-Komponen Filter
-PlatformFilter
-jsx// Penggunaan
-<PlatformFilter 
-  selectedPlatforms={[4, 187]}
-  onPlatformChange={(platforms) => handleChange(platforms)}
-/>
-GenreFilter
-jsx// Penggunaan
-<GenreFilter 
-  genres={genresList}
-  selectedGenre="4"
-  onGenreChange={(genreId) => handleChange(genreId)}
-/>
-SortFilter
-jsx// Penggunaan
-<SortFilter 
-  selectedSort="-rating"
-  onSortChange={(sort) => handleChange(sort)}
-/>
-🗄 Manajemen State
-Struktur Redux Store
-javascript{
-  game: {
-    games: [],              // Daftar game
-    gamesStatus: 'IDLE',   // Status loading
-    gamesError: null,      // State error
-    gamesSingle: {},       // Game terpilih
-    gamesSingleStatus: 'IDLE',
-    screenshots: []        // Screenshot game
-  },
-  genre: {
-    genres: [],            // Daftar genre
-    genresStatus: 'IDLE'  // Status loading
-  },
-  sidebar: {
-    sidebarStatus: false   // State menu mobile
-  }
-}
-Redux Slices
-gameSlice
-javascript// Actions
-fetchAsyncGames(params)      // Fetch game dengan filter
-fetchAsyncGameDetails(id)    // Fetch game tunggal
-fetchAsyncGameScreenshots(id) // Fetch screenshot
-clearGamesError()            // Hapus state error
-
-// Selectors
-selectAllGames()
-selectAllGamesStatus()
-selectGamesError()
-selectSingleGame()
-selectGameScreenshots()
-genreSlice
-javascript// Actions
-fetchAsyncGenres(params)     // Fetch genre
-
-// Selectors
-selectAllGenres()
-selectAllGenresStatus()
-sidebarSlice
-javascript// Actions
-setSidebarOn()               // Buka menu mobile
-setSidebarOff()              // Tutup menu mobile
-
-// Selectors
-selectSidebarStatus()
-🎨 Arsitektur Styling
-Sistem Desain
-Palet Warna (Minimalis Hitam & Putih)
-scss:root {
-  // Warna Inti
-  --clr-white: #FFFFFF;
-  --clr-black: #000000;
-  
-  // Grayscale
-  --clr-gray-darkest: #0A0A0A;
-  --clr-gray-dark: #1A1A1A;
-  --clr-gray-medium: #2D2D2D;
-  --clr-gray-light: #404040;
-  --clr-gray-lighter: #666666;
-  --clr-gray-lightest: #999999;
-  
-  // Accent
-  --clr-accent: #F5F5F5;
-}
-Tipografi
-scss// Font
---font-family-primary: 'Inter', sans-serif;
---font-family-heading: 'Space Grotesk', sans-serif;
-
-// Bobot Font
-.fw-4 { font-weight: 400; }  // Regular
-.fw-5 { font-weight: 500; }  // Medium
-.fw-6 { font-weight: 600; }  // Semi-bold
-.fw-7 { font-weight: 700; }  // Bold
-Transisi
-scss--transition-fast: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
---transition-default: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-Pola Styled Components
-javascript// Contoh styling komponen
-const GameItemWrapper = styled.div`
-  background-color: var(--clr-gray-dark);
-  border: 1px solid var(--clr-gray-medium);
-  transition: var(--transition-default);
-  
-  &:hover {
-    border-color: var(--clr-gray-light);
-    transform: translateY(-4px);
-  }
-  
-  @media screen and (max-width: 768px) {
-    // Style mobile
-  }
-`;
-Utility Classes
-scss// Display
-.d-flex { display: flex; }
-.d-grid { display: grid; }
-.d-none { display: none; }
-
-// Flexbox
-.align-items-center { align-items: center; }
-.justify-content-between { justify-content: space-between; }
-
-// Tipografi
-.text-center { text-align: center; }
-.text-uppercase { text-transform: uppercase; }
-.text-white { color: var(--clr-white); }
-
-// Spacing (4px, 8px, 16px, 24px, 48px)
-.mt-3 { margin-top: 16px; }
-.mb-4 { margin-bottom: 24px; }
-.py-5 { padding: 48px 0; }
-
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://192.168.1.100:5173/
+  ➜  press h to show help5️⃣ Buka di BrowserBuka browser (Chrome, Firefox, Edge) dan akses:http://localhost:5173atau klik link yang muncul di terminal sambil menekan Ctrl (Windows/Linux) atau Cmd (Mac)
 
 Kesesuaian Rubrik
 CPMK0501: Form, Tabel, CSS
