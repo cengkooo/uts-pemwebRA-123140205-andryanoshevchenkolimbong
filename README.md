@@ -122,15 +122,16 @@ Setelah instalasi selesai, jalankan proyek dengan perintah:
 npm run dev
 ```
 
-
-<img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/a080ff8c-fb86-4642-9042-e4ab491deeaa" />
-
-
-Kemudian buka alamat yang muncul di terminal 
+4. Kemudian buka alamat yang muncul di terminal 
 
 ```
 (http://localhost:5173)
 ```
+
+
+<img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/a080ff8c-fb86-4642-9042-e4ab491deeaa" />
+
+
 
 untuk melihat aplikasi berjalan di browser.
 
