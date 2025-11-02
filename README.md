@@ -1,6 +1,7 @@
 **🎮 Peternak Domba - Platform Database Game**
 
-**GitHub: @cengkooo
+**Nama: Andryano Shevchenko Limbong
+GitHub: @cengkooo
 NIM: 123140205
 Kelas: Pemrograman Aplikasi Website RA**
 
