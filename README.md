@@ -125,6 +125,7 @@ bashnpm run dev
 
 <img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/c2b19dbe-95b4-4bbe-8fd1-0bfb75174eec" />
 
+```
 
 🔧 Konfigurasi Environment
 Konfigurasi API
