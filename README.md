@@ -2,8 +2,7 @@
 
 **GitHub: @cengkooo
 NIM: 123140205
-Kelas: Pemrograman Aplikasi Website RA
-**
+Kelas: Pemrograman Aplikasi Website RA**
 
 Aplikasi web modern dan minimalis untuk menemukan dan menjelajahi video game, didukung oleh RAWG Video Games Database API. Dibangun dengan React, Redux, dan styled-components dengan desain estetika hitam & putih yang elegan.
 📋 Daftar Isi
