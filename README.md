@@ -1,4 +1,10 @@
-🎮 Peternak Domba - Platform Penemuan Game
+**🎮 Peternak Domba - Platform Database Game**
+
+**GitHub: @cengkooo
+NIM: 123140205
+Kelas: Pemrograman Aplikasi Website RA
+**
+
 Aplikasi web modern dan minimalis untuk menemukan dan menjelajahi video game, didukung oleh RAWG Video Games Database API. Dibangun dengan React, Redux, dan styled-components dengan desain estetika hitam & putih yang elegan.
 📋 Daftar Isi
 
@@ -118,100 +124,9 @@ Jalankan development server
 bashnpm run dev
 ```
 
-5. **Buka di browser**
-   - Navigasi ke `http://localhost:5173`
-   - Aplikasi sekarang seharusnya sudah berjalan!
+<img width="1480" height="3986" alt="image" src="https://github.com/user-attachments/assets/c2b19dbe-95b4-4bbe-8fd1-0bfb75174eec" />
 
-## 📁 Struktur Proyek
-```
-peternak-domba/
-├── public/                      # Aset statis
-├── src/
-│   ├── api/                     # Konfigurasi API
-│   │   ├── api_key.js          # RAWG API key
-│   │   └── axios.js            # Instance Axios
-│   │
-│   ├── assets/                  # Gambar dan file statis
-│   │   └── images/
-│   │
-│   ├── components/              # Komponen yang dapat digunakan ulang
-│   │   ├── common/             # Komponen bersama
-│   │   │   ├── Banner.jsx      # Banner hero
-│   │   │   ├── Breadcrumb.jsx  # Breadcrumb navigasi
-│   │   │   ├── FilterBar.jsx   # Interface multi-filter
-│   │   │   ├── Footer.jsx      # Footer situs
-│   │   │   ├── GenreFilter.jsx # Pemilihan genre
-│   │   │   ├── Navbar.jsx      # Navigasi utama
-│   │   │   ├── Pagination.jsx  # Navigasi halaman
-│   │   │   ├── PlatformFilter.jsx # Pemilihan platform
-│   │   │   ├── Preloader.jsx   # Indikator loading
-│   │   │   ├── SearchBar.jsx   # Input pencarian
-│   │   │   ├── SortFilter.jsx  # Opsi sorting
-│   │   │   ├── StarRating.jsx  # Tampilan rating
-│   │   │   ├── Tabs.jsx        # Interface tab
-│   │   │   └── Title.jsx       # Judul section
-│   │   │
-│   │   ├── game/               # Komponen khusus game
-│   │   │   ├── GameDetails.jsx # Tampilan detail game
-│   │   │   ├── GameItem.jsx    # Card game
-│   │   │   └── GameList.jsx    # Grid game
-│   │   │
-│   │   ├── genre/              # Komponen genre
-│   │   │   ├── GenreItem.jsx   # Card game genre
-│   │   │   └── GenreList.jsx   # Daftar genre
-│   │   │
-│   │   └── store/              # Komponen store
-│   │       ├── StoreDetails.jsx
-│   │       ├── StoreItem.jsx
-│   │       └── StoreList.jsx
-│   │
-│   ├── constants/              # Konstanta aplikasi
-│   │   ├── apiURL.js          # Endpoint API
-│   │   └── index.js
-│   │
-│   ├── layouts/                # Komponen layout
-│   │   └── BaseLayout.jsx     # Wrapper layout utama
-│   │
-│   ├── redux/                  # Manajemen state
-│   │   ├── store/             # Redux slices
-│   │   │   ├── gameSlice.js   # State game
-│   │   │   ├── genreSlice.js  # State genre
-│   │   │   ├── sidebarSlice.js # State UI
-│   │   │   └── store.js       # Konfigurasi Redux store
-│   │   │
-│   │   └── utils/             # Utilitas Redux
-│   │       ├── gameUtils.js   # Aksi async game
-│   │       └── genreUtils.js  # Aksi async genre
-│   │
-│   ├── routers/               # Konfigurasi routing
-│   │   └── AppRouter.jsx     # Router utama
-│   │
-│   ├── styles/                # Style global
-│   │   └── main.scss         # Stylesheet utama
-│   │
-│   ├── utils/                 # Fungsi utilitas
-│   │   ├── images.js         # Import gambar
-│   │   └── status.js         # Loading states
-│   │
-│   ├── views/                 # Komponen halaman
-│   │   ├── error/
-│   │   │   └── PageNotFound.jsx
-│   │   ├── game/
-│   │   │   ├── GameAllPage.jsx    # Halaman semua game
-│   │   │   └── GameDetailsPage.jsx # Halaman detail game
-│   │   ├── home/
-│   │   │   └── HomePage.jsx       # Halaman landing
-│   │   └── index.js
-│   │
-│   ├── App.jsx                # Komponen root
-│   └── main.jsx              # Entry point aplikasi
-│
-├── .eslintrc.cjs             # Konfigurasi ESLint
-├── .gitignore                # Aturan Git ignore
-├── index.html                # Template HTML
-├── package.json              # Dependencies
-├── README.md                 # File ini
-└── vite.config.js           # Konfigurasi Vite
+
 🔧 Konfigurasi Environment
 Konfigurasi API
 RAWG API key dikonfigurasi di src/api/api_key.js:
@@ -453,7 +368,7 @@ LocalStorage digunakan untuk menyimpan preferensi tema (dark/light).
 👨‍💻 Author
 Andryano Shevchenko Limbong 🐑
 
-GitHub: @cengkooo
+**GitHub: @cengkooo
 NIM: 123140205
 Kelas: Pemrograman Aplikasi Website RA
-Institution: Institut Teknologi Sumatera
+Institution: Institut Teknologi Sumatera**
